@@ -15,6 +15,7 @@ const Permission=DB.Permission;
 //POST - admin/permission
 const create = async (req, res, next) => {
     try{
+        console.log(routesList);
         const loggedInUser=req.authUser; 
         const insertData=[];
         const getPermissionData=routesList.map(async (value, index) => {
