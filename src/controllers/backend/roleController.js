@@ -16,7 +16,7 @@ const Permission=DB.Permission;
 
 //POST - admin/role
 const create = async (req, res, next) => {
-    try{
+    // try{
         const loggedInUser=req.authUser;
         const errors = validator(req);
         if (Object.keys(errors).length !== 0){
@@ -43,15 +43,15 @@ const create = async (req, res, next) => {
             );
         }
         
-    }catch(error){
+    // }catch(error){
 
-        sendErrorResponse(
-            res,
-            serverErrorCode,
-            "Internal server error!",
-            error
-        );
-    }
+    //     sendErrorResponse(
+    //         res,
+    //         serverErrorCode,
+    //         "Internal server error!",
+    //         error
+    //     );
+    // }
     
 }
 

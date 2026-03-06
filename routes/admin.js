@@ -19,15 +19,29 @@ const roleController = require("../src/controllers/backend/roleController")
 const permissionController = require("../src/controllers/backend/permissionController")
 const masterBrandController = require("../src/controllers/backend/masterBrandController")
 const masterCategoryController = require("../src/controllers/backend/masterCategoryController")
+const testController = require("../src/controllers/backend/testController")
 
 /* Authentication */
 router.post('/signup',authValidator.signupValidator(),authController.signup);
 router.post('/login',authValidator.loginValidator(),authController.login);
-router.get('/test',roleController.test);
+router.post('/refresh-token',authController.refreshToken);
+router.post('/logout',authController.logout);
+router.post('/forgot-password',authValidator.forgotPasswordValidator(),authController.forgotPassword);
+router.post('/reset-password/:token',authValidator.resetPasswordValidator(),authController.resetPassword);
+// router.get('/test',roleController.test);
 
 router.group('', (router) => {
-    router.use([authMiddleware.checkAuthUser,permissionMiddleware.checkPermission]); /* use like - router.use('/state',authMiddleware.checkAuthUser); to work only in 'state' route */
-    //router.use([authMiddleware.checkAuthUser]);
+    // router.use([authMiddleware.checkAuthUser,permissionMiddleware.checkPermission]); /* use like - router.use('/state',authMiddleware.checkAuthUser); to work only in 'state' route */
+    router.use([authMiddleware.checkAuthUser]);
+
+    /* role  */
+    router.group("/test", (router) => {
+        routesList.push({ module: 'Test',permission: 'Create',method:'post', link: '/test' });
+        router.post('',roleValidator.create(),testController.create);
+
+        
+    });
+
 
     /* role  */
     router.group("/role", (router) => {

@@ -8,6 +8,12 @@ module.exports ={
     "host"    : process.env.DB_DEV_HOST,
     "dialect" : process.env.DB_DEV_DIALECT,
     "use_env_variable" : process.env.USE_ENV_VARIABLE,
+    // "dialectOptions": {
+    //   ssl: {
+    //     require: true,
+    //     rejectUnauthorized: false
+    //   }
+    // }
   },
   "test": {
     "username": process.env.DB_TEST_USERNAME,

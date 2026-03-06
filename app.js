@@ -23,9 +23,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your React app's URL
+  origin: 'http://127.0.0.1:3000', // Replace with your React app's URL
   methods: 'GET,PUT,POST,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
 }));
 
 app.use('/admin', router);
