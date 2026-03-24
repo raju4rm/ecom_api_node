@@ -3,13 +3,14 @@ var jwt = require('jsonwebtoken');
 const transporter = require('../../utils/mail');
 require('dotenv').config();
 
-
 const DB=require('../../models');
 const {validator}=require('../../validations/index');
 const {sendSuccessResponse,sendRecordsResponse,sendErrorResponse}=require('../../utils/response')
 const {validationErrorCode,unauthErrorCode,notfoundErrorCode,successCode,serverErrorCode,accessDeniedErrorCode}=require('../../utils/statusCode')
 const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
+
+const {userEmitter}=require('../../events/userEvents');
 
 /*  databse  */
 const sequelize=DB.sequelize;
@@ -52,6 +53,8 @@ const signup = async (req, res, next) => {
 
             const create = await user.create(insertDate);
 
+            userEmitter.emit('userRegistered', insertDate)
+
             return sendSuccessResponse(
                 res,
                 successCode,
@@ -75,6 +78,7 @@ const signup = async (req, res, next) => {
 //POST - admin/login
 const login = async (req, res, next) => {
     console.log(req.body)
+    test();
     try{
         const errors = validator(req);
         if (Object.keys(errors).length !== 0){
@@ -467,6 +471,9 @@ const resetPassword = async (req,res,next) => {
     }
 }
 
+const test = () => {
+    console.log('test');
+}
 module.exports={
     signup,
     login,

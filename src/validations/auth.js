@@ -24,7 +24,20 @@ const signupValidator = () => {
       }
       return
 
-  })
+    }),
+    check('username').trim().notEmpty().withMessage('Username is required')
+    .custom(async (username) => {
+      const exitingUsername = 
+        await user.findAll({
+          where:{
+            username:username
+          }
+        });
+      if (exitingUsername.length) {
+        throw new Error('Username already in use')
+      }
+      return
+    })
   ]
 }
 
