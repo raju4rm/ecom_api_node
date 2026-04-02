@@ -21,7 +21,9 @@ const create = () => {
         throw new Error('Name already in use')
       }
       return
-    })
+    }),
+    check('is_active').trim().notEmpty().withMessage('Status is required')
+    
   ]
 }
 

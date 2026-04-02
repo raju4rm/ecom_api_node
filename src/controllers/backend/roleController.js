@@ -16,7 +16,7 @@ const Permission=DB.Permission;
 
 //POST - admin/role
 const create = async (req, res, next) => {
-    // try{
+    try{
         const loggedInUser=req.authUser;
         const errors = validator(req);
         if (Object.keys(errors).length !== 0){
@@ -27,13 +27,13 @@ const create = async (req, res, next) => {
                 errors
             );
         }else{
-            const {name}=req.body;
+            const {name,is_active}=req.body;
             const insertData={
                 name:name,
                 slug:name.replace(/\s/g, '').toLowerCase (),
                 created_by:loggedInUser.user_id,
                 created_at:new Date(),
-                is_active:'y'
+                is_active:is_active
             };
             const create = await Role.create(insertData);
             sendSuccessResponse(
@@ -43,15 +43,15 @@ const create = async (req, res, next) => {
             );
         }
         
-    // }catch(error){
+    }catch(error){
 
-    //     sendErrorResponse(
-    //         res,
-    //         serverErrorCode,
-    //         "Internal server error!",
-    //         error
-    //     );
-    // }
+        sendErrorResponse(
+            res,
+            serverErrorCode,
+            "Internal server error!",
+            error
+        );
+    }
     
 }
 
