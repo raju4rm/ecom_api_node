@@ -92,7 +92,7 @@ router.group('', (router) => {
         /* category  */
         router.group("/category", (router) => {
             routesList.push({ module: 'Master Category',permission: 'Create',method:'post', link: '/master/category' });
-            router.post('',masterCategoryValidator.create(),masterCategoryController.create);
+            router.post('',masterCategoryController.create);
 
             routesList.push({ module: 'Master Category',permission: 'List',method:'get', link: '/master/category' });
             router.get('',masterCategoryController.list);

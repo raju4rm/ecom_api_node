@@ -19,18 +19,26 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true
     },
     name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    created_by: DataTypes.INTEGER,
-    updated_by: DataTypes.INTEGER,
+    slug: DataTypes.STRING,
+    parent_id: DataTypes.INTEGER,
+    level: DataTypes.INTEGER,
+    sort_order: DataTypes.INTEGER,
+    icon: DataTypes.STRING,
+    image: DataTypes.STRING,
     is_active: {
       type: DataTypes.ENUM('y', 'n'),
       allowNull: false
     },
+    created_by: DataTypes.INTEGER,
+    updated_by: DataTypes.INTEGER,
+    
   }, {
     sequelize,
     modelName: 'MasterCategory',
     tableName:  'master_category',
     underscored: true,
+    timestamps: true
+
   });
   return MasterCategory;
 };

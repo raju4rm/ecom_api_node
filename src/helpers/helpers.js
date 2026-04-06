@@ -12,3 +12,12 @@ export const integer_to_roman = (num) => async (num) => {
         roman_num = (key[+digits.pop() + (i * 10)] || "") + roman_num;
     return Array(+digits.join("") + 1).join("M") + roman_num;
 };
+
+export const slugify = (text) =>{
+    let slug= text.toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')        // spaces → hyphen
+        .replace(/[^\w\-]+/g, '')    // remove special chars
+        .replace(/\-\-+/g, '-');     // multiple hyphens → single
+    return slug;
+}

@@ -109,7 +109,7 @@ const login = async (req, res, next) => {
                     },
                     process.env.JWT_SECRET_KEY,
                     {
-                        expiresIn : '1m'
+                        expiresIn : '1000m'
                     });
 
                     const refreshToken=crypto.randomBytes(64).toString("hex");
