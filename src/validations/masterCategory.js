@@ -22,8 +22,7 @@ const create = () => {
       }
       return
     }),
-    check('sort_order').trim().notEmpty().withMessage('Sort order is required')
-    .trim().isInt().withMessage('Sort Order must be a number '),
+    check('sort_order').trim().notEmpty().withMessage('Sort Order is required')
 
   ]
 }

@@ -2,7 +2,7 @@ const DB = require('../../models');
 const { validator } = require('../../validations/index');
 const { sendSuccessResponse, sendRecordsResponse, sendErrorResponse } = require('../../utils/response')
 const { validationErrorCode, unauthErrorCOde, notfoundErrorCode, successCode, serverErrorCode } = require('../../utils/statusCode');
-const { Sequelize } = require('sequelize');
+const { Sequelize, where } = require('sequelize');
 var routesList = require('../../../routes/routesList');
 const { slugify } = require('../../helpers/helpers')
 const multer = require('multer');
@@ -38,7 +38,7 @@ const upload = multer({
     storage:storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 2  // 2MB
+        fileSize: 200000  // 2MB
     },
  });
 
@@ -53,27 +53,32 @@ const create = async (req, res, next) => {
         { name: 'icon', maxCount: 1 },
         { name: 'image', maxCount: 1 }
     ])(req, res, async (err) => {
+        req.fileValidationErrors = {};
+
         if (err) {
             let errors = {};
-
             if (err.code === 'LIMIT_FILE_SIZE') {
-                errors[err.field || 'file'] = 'File size exceeds limit';
+                req.fileValidationErrors[err.field || 'file'] = 'File size exceeds limit';
             } else if (err.code === 'INVALID_FILE_TYPE') {
-                errors[err.field] = 'Wrong file type';
+                req.fileValidationErrors[err.field] = 'Wrong file type';
             } else {
-                errors['file'] = err.message;
+                req.fileValidationErrors['file'] = err.message;
             }
-            return sendErrorResponse(
-                res,
-                serverErrorCode,
-                "File upload error",
-                errors
-            );
+            // return sendErrorResponse(
+            //     res,
+            //     serverErrorCode,
+            //     "File upload error",
+            //     errors
+            // );
         }
-
         try {
-
-            const errors = await validator(req, masterCategory.create());
+            let errors = await validator(req, masterCategory.create());
+            if (!req.files?.icon?.length) {
+                errors.icon = 'Icon file is required';
+            }
+            if (req.fileValidationErrors && Object.keys(req.fileValidationErrors).length > 0) {
+                errors = { ...errors, ...req.fileValidationErrors };
+            }
             if (Object.keys(errors).length !== 0) {
                 return sendErrorResponse(
                     res,
@@ -85,7 +90,27 @@ const create = async (req, res, next) => {
             const loggedInUser = req.authUser;
             let { name, parent_id, sort_order } = req.body;
 
-            let level = parent_id ? 2 : 1;
+            let level = 1;
+            if(parent_id === null || parent_id === undefined || parent_id.toString().trim() === ''){
+                level=1;
+                parent_id=null
+            }else{
+                const getLevel = await MasterCategory.findOne({
+                    where:{
+                        master_category_id:parent_id
+                    },
+                    orderBy:['level','desc']
+                })
+                if(getLevel){
+                    level=getLevel.level + 1;
+                }
+            }
+
+            if (!sort_order || sort_order.toString().trim() === '' || sort_order === 'null') {
+                sort_order = null; // or 0 if required
+            } else {
+                sort_order = parseInt(sort_order);
+            }
 
             let icon_path = '';
             let image_path = '';
@@ -251,7 +276,10 @@ const list = async (req, res, next) => {
         let attributesFields = [
             'master_category_id',
             'name',
-            'description',
+            'parent_id',
+            'icon',
+            'image',
+            'sort_order',
             'created_by',
             'is_active'
         ];
@@ -320,10 +348,38 @@ const list = async (req, res, next) => {
 
 }
 
+const all = async (req,res) =>{
+    try{
+        const result = await MasterCategory.findAll({
+            attributes : [
+                'master_category_id',
+                'name'
+            ],
+            order : [
+                'name'
+            ]
+        });
+        return sendRecordsResponse(
+            res,
+            successCode,
+            "All category data",
+            result,
+            result.length
+        );
+    } catch (error) {
+        sendErrorResponse(
+            res,
+            serverErrorCode,
+            "Internal server error!",
+            error
+        );
+    }
+}
 
 module.exports = {
     create,
     edit,
     update,
-    list
+    list,
+    all
 }

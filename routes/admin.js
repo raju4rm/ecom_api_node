@@ -102,6 +102,9 @@ router.group('', (router) => {
 
             routesList.push({ module: 'Master Category',permission: 'Update',method:'put', link: '/master/category' });
             router.put('',masterCategoryValidator.update(),masterCategoryController.update);
+
+            routesList.push({ module: 'Master Category',permission: 'Get All Category',method:'get', link: '/master/category/all' });
+            router.get('/all',masterCategoryController.all);
         });
     });
 
