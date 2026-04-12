@@ -28,6 +28,7 @@ app.use(cors({
   allowedHeaders: 'Content-Type,Authorization',
   credentials: true
 }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/admin', router);
 //app.use('/users', usersRouter);

@@ -276,7 +276,6 @@ const list = async (req, res, next) => {
         let attributesFields = [
             'master_category_id',
             'name',
-            'parent_id',
             'icon',
             'image',
             'sort_order',
@@ -306,6 +305,14 @@ const list = async (req, res, next) => {
 
         const result = await MasterCategory.findAll({
             attributes: attributesFields,
+            include:[
+                {
+                    model:MasterCategory,
+                    as:'parent',
+                    attributes:['name'],
+                    required:false
+                }
+            ],
             where: whereCondition,
             offset: start,
             limit: limit,

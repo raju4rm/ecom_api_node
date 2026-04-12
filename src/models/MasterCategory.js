@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      MasterCategory.belongsTo(models.MasterCategory, {
+        as: 'parent',
+        foreignKey: 'parent_id',
+        targetKey: 'master_category_id'
+      });
     }
   }
   MasterCategory.init({
