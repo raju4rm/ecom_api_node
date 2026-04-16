@@ -257,7 +257,8 @@ const update = async (req, res, next) => {
 //GET - admin/role
 const list = async (req, res, next) => {
     try {
-        const { search, page, name, isActive } = req.query
+        const { search, page, name, is_active, parent_id } = req.query
+        console.log(req.query);
         const loggedInUser = req.authUser;
 
         let per_page = 10
@@ -293,9 +294,14 @@ const list = async (req, res, next) => {
             }
         }
 
-        if (isActive) {
+        if (is_active) {
             whereCondition.is_active = {
-                [Op.eq]: isActive
+                [Op.eq]: is_active
+            }
+        }
+        if(parent_id){
+            whereCondition.parent_id = {
+                [Op.eq]: parent_id
             }
         }
 
