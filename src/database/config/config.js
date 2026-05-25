@@ -8,6 +8,7 @@ module.exports ={
     "host"    : process.env.DB_DEV_HOST,
     "dialect" : process.env.DB_DEV_DIALECT,
     "use_env_variable" : process.env.USE_ENV_VARIABLE,
+    // "port" : 6543,
     // "dialectOptions": {
     //   ssl: {
     //     require: true,
